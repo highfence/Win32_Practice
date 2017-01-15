@@ -1,20 +1,15 @@
 #pragma once
+#include <Windows.h>
 
 const int MAX_POLYGON_DOT = 10;
 const int WIN_WIDTH = 800;
 const int WIN_HEIGHT = 600;
+const int HATCH_STYLE_NUM = 6;
 
 enum DrawingType
 {
 	RECTANGLE, CIRCLE, POLYGON, TYPE_NUM
 };
-
-typedef struct point
-{
-	unsigned int x;
-	unsigned int y;
-
-} POINT_t;
 
 typedef struct rgb
 {
@@ -29,17 +24,24 @@ class RandomDraw
 public :
 
 	// Create and destroy
-	RandomDraw();
+	RandomDraw(HWND);
 	~RandomDraw() = default;
 
 	// Member variable
 	DrawingType m_DrawingType;
-	POINT_t m_FirstDot;
-	POINT_t m_SecondDot;
+	POINT m_FirstDot;
+	POINT m_SecondDot;
+	bool m_IsStyleHatched;
+	int m_HatchStyleNumber;
 	RGB_t m_Color;
-	POINT_t m_PolygonDots[MAX_POLYGON_DOT];
+	POINT m_PolygonDots[MAX_POLYGON_DOT];
+	int m_NumberOfPolyDots	;
+
+	// Create Parameter;
+	HWND m_Hwnd;
+	PAINTSTRUCT m_Ps;
 	
 	// Member Function
-	bool InitDataSetting();
+	bool InitDataSetting(HWND);
 	void Draw();
 };

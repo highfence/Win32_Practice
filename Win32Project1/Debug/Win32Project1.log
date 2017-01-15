@@ -1,5 +1,4 @@
-﻿  WinMain.cpp
-  First.cpp
-  코드를 생성하고 있습니다...
+﻿  RandomDraw.cpp
+c:\users\kwen won lee\desktop\project\win32project1\win32project1\randomdraw.cpp(182): warning C4800: 'int': 'true' 또는 'false'로 bool 값을 강제하고 있습니다(성능 경고).
   Win32Project1.vcxproj -> C:\Users\kwen won Lee\Desktop\Project\Win32Project1\Debug\Win32Project1.exe
   Win32Project1.vcxproj -> C:\Users\kwen won Lee\Desktop\Project\Win32Project1\Debug\Win32Project1.pdb (Full PDB)

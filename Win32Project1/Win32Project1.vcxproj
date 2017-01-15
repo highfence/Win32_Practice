@@ -147,6 +147,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="RandomDraw.h" />
+    <ClInclude Include="RandomDrawHW.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="resource2.h" />
   </ItemGroup>
@@ -156,6 +157,7 @@
   <ItemGroup>
     <ClCompile Include="First.cpp" />
     <ClCompile Include="RandomDraw.cpp" />
+    <ClCompile Include="RandomDrawHW.cpp" />
     <ClCompile Include="WinMain.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

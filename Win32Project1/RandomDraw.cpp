@@ -1,4 +1,5 @@
-#include <Windows.h>
+
+#ifdef RANDOM_DRAW
 #include "resource2.h"
 #include "RandomDraw.h"
 
@@ -60,6 +61,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 {
 	HDC hdc;
 	PAINTSTRUCT ps;
+	HBRUSH myBrush;
+	HBRUSH oldBrush;
 
 	switch (iMessage)
 	{
@@ -70,29 +73,40 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 	}
 	case WM_LBUTTONDOWN:
 	{
-		hdc = GetDC(hWnd);
+		hdc = BeginPaint(hWnd, &ps);
+		RandomDraw data = RandomDraw(hWnd);
 
-		int drawType = rand() % 2;
-		int FirstDotX = rand() % 800;
-		int FirstDotY = rand() % 600;
-		int SecondDotX = rand() % (FirstDotX + 1);
-		int SecondDotY = rand() % (FirstDotY + 1);
-
-		HBRUSH myBrush = CreateHatchBrush(HS_BDIAGONAL, RGB(rand() % 255, rand() % 255, rand() % 255));
-		HBRUSH oldBrush = (HBRUSH)SelectObject(hdc, myBrush);
-
-		if (drawType == 0)
+		// Hatched 스타일이었을 경우.
+		if (data.m_IsStyleHatched)
 		{
-			Rectangle(hdc, FirstDotX, FirstDotY, SecondDotX, SecondDotY);
+			myBrush = CreateHatchBrush(data.m_HatchStyleNumber, RGB(data.m_Color.red, data.m_Color.green, data.m_Color.blue));
 		}
+		// 아닐 경우 Solid 스타일을 만든다.
 		else
 		{
-			Ellipse(hdc, FirstDotX, FirstDotY, SecondDotX, SecondDotY);
+			myBrush = CreateSolidBrush(RGB(data.m_Color.red, data.m_Color.green, data.m_Color.blue));
 		}
 
-		SelectObject(hdc, oldBrush);
+		// OldBrush를 저장해 둔다.
+		oldBrush = (HBRUSH)SelectObject(hdc, myBrush);
 
-		ReleaseDC(hWnd, hdc);
+		if (data.m_DrawingType == DrawingType::RECTANGLE)
+		{
+			Rectangle(hdc, data.m_FirstDot.x, data.m_FirstDot.y, data.m_SecondDot.x, data.m_SecondDot.y);
+		}
+		else if (data.m_DrawingType == DrawingType::CIRCLE)
+		{
+			Ellipse(hdc, data.m_FirstDot.x, data.m_FirstDot.y, data.m_SecondDot.x, data.m_SecondDot.y);
+		}
+		// Polygons
+		else
+		{
+			Polygon(hdc, data.m_PolygonDots, data.m_NumberOfPolyDots);
+		}
+
+		(HBRUSH)SelectObject(hdc, oldBrush);
+		EndPaint(hWnd, &ps);
+
 		break;
 	}
 	case WM_PAINT:
@@ -143,20 +157,35 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 	return (DefWindowProc(hWnd, iMessage, wParam, lParam));
 }
 
-RandomDraw::RandomDraw()
+RandomDraw::RandomDraw(HWND hWnd)
 {
-	if (InitDataSetting())
+	if (InitDataSetting(hWnd))
 	{
-		Draw();
+		//Draw();
 	}
 
 	return;
 }
 
-bool RandomDraw::InitDataSetting()
+bool RandomDraw::InitDataSetting(HWND hWnd)
 {
+	// Parameter Setting
+	m_Hwnd = hWnd;
+
 	// DrawingType Decision
-	m_DrawingType = (DrawingType)rand();
+	int convertTypeNum = rand() % DrawingType::TYPE_NUM;
+	m_DrawingType = (DrawingType)convertTypeNum;
+
+	// RGB Decision
+	m_Color.red = rand() % 255;
+	m_Color.green = rand() % 255;
+	m_Color.blue = rand() % 255;
+
+	m_IsStyleHatched = rand() % 2;
+	if (m_IsStyleHatched)
+	{
+		m_HatchStyleNumber = rand() % HATCH_STYLE_NUM;
+	}
 
 	// If Type is not polygon
 	if (m_DrawingType != DrawingType::POLYGON)
@@ -166,16 +195,77 @@ bool RandomDraw::InitDataSetting()
 		m_FirstDot.y = rand() % WIN_HEIGHT;
 
 		// SecondDot Decision.
+		m_SecondDot.x = rand() % WIN_WIDTH;
+		m_SecondDot.y = rand() % WIN_HEIGHT;
+
+		// Coordinates overlap
+		while (m_SecondDot.x == m_FirstDot.x)
+		{
+			m_SecondDot.x = rand() % WIN_WIDTH;
+		}
+
+		while (m_SecondDot.y == m_FirstDot.y)
+		{
+			m_SecondDot.y = rand() % WIN_HEIGHT;
+		}
 	}
 
 	// If Type is Polygon.
 	else
 	{
+		m_NumberOfPolyDots = rand() % (MAX_POLYGON_DOT - 3) + 3;
+
+		// Polygon Coordinates Decision
+		for (int i = 0; i < m_NumberOfPolyDots; ++i)
+		{
+			m_PolygonDots[i].x = rand() % WIN_WIDTH;
+			m_PolygonDots[i].y = rand() % WIN_HEIGHT;
+		}
 
 	}
 
 	return true;
 }
 
+void RandomDraw::Draw()
+{
+	HDC hdc = BeginPaint(m_Hwnd, &m_Ps);
+	HBRUSH myBrush;
+	HBRUSH oldBrush;
+
+	// Hatched 스타일이었을 경우.
+	if (m_IsStyleHatched)
+	{
+		myBrush = CreateHatchBrush(m_HatchStyleNumber, RGB(m_Color.red, m_Color.green, m_Color.blue));
+	}
+	// 아닐 경우 Solid 스타일을 만든다.
+	else
+	{
+		myBrush = CreateSolidBrush(RGB(m_Color.red, m_Color.green, m_Color.blue));
+	}
+
+	// OldBrush를 저장해 둔다.
+	oldBrush = (HBRUSH)SelectObject(hdc, myBrush);
+
+	if (m_DrawingType == DrawingType::RECTANGLE)
+	{
+		Rectangle(hdc, m_FirstDot.x, m_FirstDot.y, m_SecondDot.x, m_SecondDot.y);
+	}
+	else if (m_DrawingType == DrawingType::CIRCLE)
+	{
+		Ellipse(hdc, m_FirstDot.x, m_FirstDot.y, m_SecondDot.x, m_SecondDot.y);
+	}
+	// Polygons
+	else
+	{
+		Polygon(hdc, m_PolygonDots, m_NumberOfPolyDots);
+	}
+
+	(HBRUSH)SelectObject(hdc, oldBrush);
+	EndPaint(m_Hwnd, &m_Ps);
+
+	return;
+}
 
 
+#endif
