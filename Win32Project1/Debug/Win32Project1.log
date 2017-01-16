@@ -1,5 +1,5 @@
 ﻿  RandomDrawHW.cpp
-c:\users\kwen won lee\desktop\project\win32project1\win32project1\randomdrawhw.cpp(80): warning C4800: 'int': 'true' 또는 'false'로 bool 값을 강제하고 있습니다(성능 경고).
-c:\users\kwen won lee\desktop\project\win32project1\win32project1\randomdrawhw.cpp(114): warning C4101: 'ps' :참조되지 않은 지역 변수입니다.
+c:\users\kwen won lee\desktop\project\win32project1\win32project1\randomdrawhw.cpp(110): warning C4800: 'int': 'true' 또는 'false'로 bool 값을 강제하고 있습니다(성능 경고).
+c:\users\kwen won lee\desktop\project\win32project1\win32project1\randomdrawhw.cpp(145): warning C4101: 'ps' :참조되지 않은 지역 변수입니다.
   Win32Project1.vcxproj -> C:\Users\kwen won Lee\Desktop\Project\Win32Project1\Debug\Win32Project1.exe
   Win32Project1.vcxproj -> C:\Users\kwen won Lee\Desktop\Project\Win32Project1\Debug\Win32Project1.pdb (Full PDB)

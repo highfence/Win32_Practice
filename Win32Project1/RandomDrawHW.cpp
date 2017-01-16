@@ -61,9 +61,39 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 		return 0;
 		
 	case WM_LBUTTONDOWN :
+	{
 		auto thisData = new DrawDataSet();
 		Draw(hWnd, thisData);
+		DrawDataVector.push_back(thisData);
 		break;
+	}
+	case WM_COMMAND :
+		int returnVal = -1;
+		switch (LOWORD(wParam))
+		{
+		case ID_FILE_SAVEFILE :
+			returnVal = SaveFile();
+			if (returnVal != PERFORM_WELL)
+			{
+				MessageBoxA(NULL, "에러가 발생했습니다. 다시 저장해주세요.", "ERROR", MB_OK);
+			}
+			else
+			{
+				MessageBoxA(NULL, "저장을 완료했습니다.", "Save", MB_OK);
+			}
+			break;
+		case ID_FILE_LOADFILE :
+			returnVal = LoadFile(hWnd);
+			if (returnVal != PERFORM_WELL)
+			{
+				MessageBoxA(NULL, "에러가 발생했습니다. 다시 로드해주세요.", "ERROR", MB_OK);
+			}
+			else
+			{
+				MessageBoxA(NULL, "로드를 끝냈습니다.", "Load", MB_OK);
+			}
+			break;
+		}
 
 	}
 
@@ -149,4 +179,70 @@ void Draw(HWND hWnd, DrawDataSet* thisData)
 	SelectObject(hdc, oldBrush);
 
 	ReleaseDC(hWnd, hdc);
+}
+
+
+int SaveFile()
+{
+	FILE *fp = fopen("DataSet.csv", "w");
+	if (!fp)
+	{
+		return ERROR_FILE_OPEN;
+	}
+
+	// title
+	fprintf(fp, "DrawingType,Point.x,Point.y,width,height,IsStyleHatched,HatchStyle,R,G,B,NumberOfPolyDots\n");
+
+	// data save
+	int idx;
+	int dataNumber = DrawDataVector.size();
+
+	for (idx = 0; idx < dataNumber; ++idx)
+	{
+		DrawDataSet* thisData = DrawDataVector.at(idx);
+		fprintf(fp, "%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d",
+			thisData->m_DrawingType, thisData->m_DrawingPoint.x, thisData->m_DrawingPoint.y, thisData->m_DrawingWidth, thisData->m_DrawingHeight,
+			thisData->m_IsStyleHatched, thisData->m_HatchStyleNumber, thisData->m_Color.red, thisData->m_Color.green, thisData->m_Color.blue,
+			thisData->m_NumberOfPolyDots);
+
+		int polyDotNumber = thisData->m_NumberOfPolyDots;
+		for (int polyIdx = 0; polyIdx < polyDotNumber; ++polyIdx)
+		{
+			POINT dotPoint = thisData->m_PolygonDots[polyIdx];
+			fprintf(fp, ",%d,%d", dotPoint.x, dotPoint.y);
+		}
+
+		fprintf(fp, "\n");
+	}
+
+	fclose(fp);
+
+	return PERFORM_WELL;
+}
+
+int LoadFile(HWND hWnd)
+{
+	FILE *fp = fopen("DataSet.csv", "r");
+	if (!fp)
+	{
+		return ERROR_FILE_OPEN;
+	}
+
+	// Data Vector 초기화.
+	DrawDataVector.clear();
+
+	char buf[1024];
+	// Title 제거.
+	fgets(buf, 1024, fp);
+
+	while (fgets(buf, 1024, fp))
+	{
+		std::string dataLine(buf);
+		DrawDataSet* loadedData = new DrawDataSet;
+
+
+
+	}
+
+	return PERFORM_WELL;
 }
