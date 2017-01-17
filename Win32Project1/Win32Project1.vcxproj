@@ -155,7 +155,9 @@
     <ResourceCompile Include="Win32Project1.rc" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Control.cpp" />
     <ClCompile Include="First.cpp" />
+    <ClCompile Include="Practice.cpp" />
     <ClCompile Include="RandomDraw.cpp" />
     <ClCompile Include="RandomDrawHW.cpp" />
     <ClCompile Include="WinMain.cpp" />

@@ -59,3 +59,4 @@ std::vector<DrawDataSet*> DrawDataVector;
 void Draw(HWND, DrawDataSet*);
 int SaveFile();
 int LoadFile(HWND);
+std::string* strSplit(std::string*);

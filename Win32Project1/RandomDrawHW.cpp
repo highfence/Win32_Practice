@@ -1,3 +1,4 @@
+#ifdef RandomDrawHW
 #include "RandomDrawHW.h"
 #include "resource2.h"
 
@@ -53,10 +54,10 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmd
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 {
-
+	
 	switch (iMessage)
 	{
-	case WM_QUIT :
+	case WM_DESTROY :
 		PostQuitMessage(0);
 		return 0;
 		
@@ -240,9 +241,30 @@ int LoadFile(HWND hWnd)
 		std::string dataLine(buf);
 		DrawDataSet* loadedData = new DrawDataSet;
 
-
-
+		/*
+		auto drawingType(strSplit(dataLine));
+		auto drawingPoint(strSplit(dataLine));
+*/
 	}
 
 	return PERFORM_WELL;
 }
+
+// 문자열 앞에서부터 최초로 만나는 쉼표까지의 문자열과 그 뒤까지의 문자열을 잘라주는 함수.
+std::string* strSplit(std::string originStr)
+{
+	int cutPoint;
+
+	cutPoint = originStr.find_first_of(",");
+	if (cutPoint != originStr.npos)
+	{
+		return nullptr;
+	}
+
+	std::string* strResult = new std::string(originStr.substr(0, cutPoint));
+	originStr = originStr.substr(cutPoint + 1);
+
+	return strResult;
+}
+
+#endif

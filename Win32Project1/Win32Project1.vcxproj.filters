@@ -46,5 +46,11 @@
     <ClCompile Include="RandomDrawHW.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Practice.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Control.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
