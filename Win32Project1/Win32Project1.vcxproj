@@ -155,6 +155,7 @@
     <ResourceCompile Include="Win32Project1.rc" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Check.cpp" />
     <ClCompile Include="Control.cpp" />
     <ClCompile Include="First.cpp" />
     <ClCompile Include="Practice.cpp" />

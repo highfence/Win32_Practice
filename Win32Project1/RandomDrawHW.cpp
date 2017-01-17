@@ -83,6 +83,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 				MessageBoxA(NULL, "저장을 완료했습니다.", "Save", MB_OK);
 			}
 			break;
+			
 		case ID_FILE_LOADFILE :
 			returnVal = LoadFile(hWnd);
 			if (returnVal != PERFORM_WELL)
@@ -93,6 +94,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 			{
 				MessageBoxA(NULL, "로드를 끝냈습니다.", "Load", MB_OK);
 			}
+			break;
+
+		case ID_FILE_EXIT :
+			DestroyWindow(hWnd);
 			break;
 		}
 

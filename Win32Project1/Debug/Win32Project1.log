@@ -1,2 +1,3 @@
-﻿  Control.cpp
-c:\users\kwen won lee\desktop\project\win32project1\win32project1\control.cpp : fatal error C1041: 프로그램 데이터베이스 'C:\Users\kwen won Lee\Desktop\Project\Win32Project1\Win32Project1\Debug\vc140.pdb'을(를) 열 수 없습니다. 여러 CL.EXE에서 동일한 .PDB 파일에 쓰는 경우 /FS를 사용하십시오.
+﻿  Check.cpp
+  Win32Project1.vcxproj -> C:\Users\kwen won Lee\Desktop\Project\Win32Project1\Debug\Win32Project1.exe
+  Win32Project1.vcxproj -> C:\Users\kwen won Lee\Desktop\Project\Win32Project1\Debug\Win32Project1.pdb (Full PDB)
