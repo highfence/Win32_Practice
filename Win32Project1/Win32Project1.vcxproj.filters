@@ -27,6 +27,12 @@
     <ClInclude Include="RandomDrawHW.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="ChungDol.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="ImgScroll.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Win32Project1.rc">
@@ -55,5 +61,43 @@
     <ClCompile Include="Check.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Radiobox.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Mouse.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Timer.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Cursor.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Image.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="ChungDol.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="ImgScroll.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Cursor_Icon_Files\Cursor\LeagueOfLegends\link.cur">
+      <Filter>리소스 파일</Filter>
+    </None>
+    <None Include="Cursor_Icon_Files\AnimatedCursor\gam1229.ani" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="angryBirdIcon\Fasticon-Angry-Birds-Red-bird.ico">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="..\Resource\BackGround.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="..\Resource\sky1.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
   </ItemGroup>
 </Project>

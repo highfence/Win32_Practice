@@ -146,6 +146,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="ChungDol.h" />
+    <ClInclude Include="ImgScroll.h" />
     <ClInclude Include="RandomDraw.h" />
     <ClInclude Include="RandomDrawHW.h" />
     <ClInclude Include="resource.h" />
@@ -156,12 +158,28 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Check.cpp" />
+    <ClCompile Include="ChungDol.cpp" />
     <ClCompile Include="Control.cpp" />
+    <ClCompile Include="Cursor.cpp" />
     <ClCompile Include="First.cpp" />
+    <ClCompile Include="Image.cpp" />
+    <ClCompile Include="ImgScroll.cpp" />
+    <ClCompile Include="Mouse.cpp" />
     <ClCompile Include="Practice.cpp" />
+    <ClCompile Include="Radiobox.cpp" />
     <ClCompile Include="RandomDraw.cpp" />
     <ClCompile Include="RandomDrawHW.cpp" />
+    <ClCompile Include="Timer.cpp" />
     <ClCompile Include="WinMain.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Cursor_Icon_Files\AnimatedCursor\gam1229.ani" />
+    <None Include="Cursor_Icon_Files\Cursor\LeagueOfLegends\link.cur" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\Resource\BackGround.bmp" />
+    <Image Include="..\Resource\sky1.bmp" />
+    <Image Include="angryBirdIcon\Fasticon-Angry-Birds-Red-bird.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

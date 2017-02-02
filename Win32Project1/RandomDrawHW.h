@@ -9,11 +9,13 @@ const int WIN_WIDTH = 800;
 const int WIN_HEIGHT = 600;
 const int HATCH_STYLE_NUM = 6;
 const int DRAW_DATA_MAX_NUM = 256;
+const int INT_NULL = INT_MIN;
 
 enum DrawingType
 {
 	RECTANGLE, CIRCLE, POLYGON, TYPE_NUM
 };
+
 
 enum RETURN_TYPE
 {
@@ -57,6 +59,8 @@ std::vector<DrawDataSet*> DrawDataVector;
 
 // Fuctions
 void Draw(HWND, DrawDataSet*);
+void DrawVector(HWND);
 int SaveFile();
 int LoadFile(HWND);
-std::string* strSplit(std::string*);
+int strSplit(std::string*);
+bool to_bool(const int);

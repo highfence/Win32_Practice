@@ -64,8 +64,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 	case WM_LBUTTONDOWN :
 	{
 		auto thisData = new DrawDataSet();
-		Draw(hWnd, thisData);
 		DrawDataVector.push_back(thisData);
+		Draw(hWnd, thisData);
 		break;
 	}
 	case WM_COMMAND :
@@ -93,7 +93,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 			else
 			{
 				MessageBoxA(NULL, "로드를 끝냈습니다.", "Load", MB_OK);
+				DrawVector(hWnd);
 			}
+			break;
+			
+		case ID_FILE_REFRESH :
+			InvalidateRect(hWnd, NULL, TRUE);
 			break;
 
 		case ID_FILE_EXIT :
@@ -113,7 +118,16 @@ DrawDataSet::DrawDataSet()
 	m_Color.green = rand() % 255 + 1;
 	m_Color.blue = rand() % 255 + 1;
 
-	m_IsStyleHatched = rand() % 2;
+	int randomVal = rand() % 2;
+	if (randomVal == 0)
+	{
+		m_IsStyleHatched = false;
+	}
+	else
+	{
+		m_IsStyleHatched = true;
+	}
+
 	if (m_IsStyleHatched)
 	{
 		m_HatchStyleNumber = rand() % HATCH_STYLE_NUM;
@@ -142,13 +156,13 @@ DrawDataSet::DrawDataSet()
 		}
 	}
 	
+	return;
 }
 
 // 윈도우 핸들과 데이터셋을 인자로 받으면 그려주는 함수.
 void Draw(HWND hWnd, DrawDataSet* thisData)
 {
 	HDC hdc;
-	PAINTSTRUCT ps;
 
 	hdc = GetDC(hWnd);
 	HBRUSH myBrush;
@@ -185,6 +199,19 @@ void Draw(HWND hWnd, DrawDataSet* thisData)
 	SelectObject(hdc, oldBrush);
 
 	ReleaseDC(hWnd, hdc);
+
+	return;
+}
+
+// DrawDataVector에 들어있는 모든 도형을 그려주는 함수.
+void DrawVector(HWND hWnd)
+{
+	for (auto i : DrawDataVector)
+	{
+		Draw(hWnd, i);
+	}
+
+	return;
 }
 
 
@@ -205,16 +232,69 @@ int SaveFile()
 
 	for (idx = 0; idx < dataNumber; ++idx)
 	{
-		DrawDataSet* thisData = DrawDataVector.at(idx);
-		fprintf(fp, "%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d",
-			thisData->m_DrawingType, thisData->m_DrawingPoint.x, thisData->m_DrawingPoint.y, thisData->m_DrawingWidth, thisData->m_DrawingHeight,
-			thisData->m_IsStyleHatched, thisData->m_HatchStyleNumber, thisData->m_Color.red, thisData->m_Color.green, thisData->m_Color.blue,
-			thisData->m_NumberOfPolyDots);
+		// 저장을 위한 변수 선언.
+		DrawingType inputDrawingType;
+		POINT inputDrawingPoint;
+		int inputDrawingWidth = 0;
+		int inputDrawingHeight = 0;
+		int inputNumberOfPolyDots = 0;
+		POINT inputPolygonDots[MAX_POLYGON_DOT] = { 0 };
+		RGB_t inputColor;
+		bool inputIsStyleHatched;
+		int inputHatchStyleNumber;
 
-		int polyDotNumber = thisData->m_NumberOfPolyDots;
-		for (int polyIdx = 0; polyIdx < polyDotNumber; ++polyIdx)
+		DrawDataSet* thisData = DrawDataVector.at(idx);
+
+		// DrawingType에 의한 분류.
+		inputDrawingType = thisData->m_DrawingType;
+		if (inputDrawingType != POLYGON)
 		{
-			POINT dotPoint = thisData->m_PolygonDots[polyIdx];
+			inputDrawingPoint = thisData->m_DrawingPoint;
+			inputDrawingWidth = thisData->m_DrawingWidth;
+			inputDrawingHeight = thisData->m_DrawingHeight;
+
+			inputNumberOfPolyDots = INT_NULL;
+			
+		}
+		else
+		{
+			inputDrawingPoint.x = INT_NULL;
+			inputDrawingPoint.y = INT_NULL;
+			inputDrawingWidth = INT_NULL;
+			inputDrawingHeight = INT_NULL;
+
+			inputNumberOfPolyDots = thisData->m_NumberOfPolyDots;
+
+			for (int polyIdx = 0; polyIdx < inputNumberOfPolyDots; ++polyIdx)
+			{
+				inputPolygonDots[polyIdx] = thisData->m_PolygonDots[polyIdx];
+			}
+		}
+
+		// HatchStyle에 의한 분류.
+		inputIsStyleHatched = thisData->m_IsStyleHatched;
+		if (inputIsStyleHatched == true)
+		{
+			inputHatchStyleNumber = thisData->m_HatchStyleNumber;
+		}
+		else
+		{
+			inputHatchStyleNumber = INT_NULL;
+		}
+
+		// Color
+		inputColor.red = thisData->m_Color.red;
+		inputColor.green = thisData->m_Color.green;
+		inputColor.blue = thisData->m_Color.blue;
+
+		fprintf(fp, "%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d",
+			inputDrawingType, inputDrawingPoint.x, inputDrawingPoint.y, inputDrawingWidth, inputDrawingHeight,
+			inputIsStyleHatched, inputHatchStyleNumber, inputColor.red, inputColor.green, inputColor.blue,
+			inputNumberOfPolyDots);
+
+		for (int polyIdx = 0; polyIdx < inputNumberOfPolyDots; ++polyIdx)
+		{
+			POINT dotPoint = inputPolygonDots[polyIdx];
 			fprintf(fp, ",%d,%d", dotPoint.x, dotPoint.y);
 		}
 
@@ -228,6 +308,7 @@ int SaveFile()
 
 int LoadFile(HWND hWnd)
 {
+
 	FILE *fp = fopen("DataSet.csv", "r");
 	if (!fp)
 	{
@@ -240,36 +321,104 @@ int LoadFile(HWND hWnd)
 	char buf[1024];
 	// Title 제거.
 	fgets(buf, 1024, fp);
+	std::string dataLine;
 
 	while (fgets(buf, 1024, fp))
 	{
-		std::string dataLine(buf);
+		dataLine.erase();
+		dataLine.assign(buf);
 		DrawDataSet* loadedData = new DrawDataSet;
 
-		/*
-		auto drawingType(strSplit(dataLine));
-		auto drawingPoint(strSplit(dataLine));
-*/
+		// 타입 로드
+		loadedData->m_DrawingType = (DrawingType)strSplit(&dataLine);
+
+		// 포인트랑 너비, 높이 결정.
+		if (loadedData->m_DrawingType == POLYGON)
+		{
+			loadedData->m_DrawingPoint.x = INT_NULL;
+			loadedData->m_DrawingPoint.y = INT_NULL;
+
+			loadedData->m_DrawingWidth = INT_NULL;
+			loadedData->m_DrawingHeight = INT_NULL;
+			
+			for (int i = 0; i < 4; ++i)
+			{
+				strSplit(&dataLine);
+			}
+		}
+		else
+		{
+			loadedData->m_DrawingPoint.x = strSplit(&dataLine);
+			loadedData->m_DrawingPoint.y = strSplit(&dataLine);
+
+			loadedData->m_DrawingWidth = strSplit(&dataLine);
+			loadedData->m_DrawingHeight = strSplit(&dataLine);
+		}
+
+		// 스타일 로드
+		int tempBoolVal = strSplit(&dataLine);
+		loadedData->m_IsStyleHatched = to_bool(tempBoolVal);
+		if (loadedData->m_IsStyleHatched == true)
+		{
+			loadedData->m_HatchStyleNumber = strSplit(&dataLine);
+		}
+		else
+		{
+			loadedData->m_HatchStyleNumber = INT_NULL;
+			strSplit(&dataLine);
+		}
+
+		// 컬러 로드
+		loadedData->m_Color.red = strSplit(&dataLine);
+		loadedData->m_Color.green = strSplit(&dataLine);
+		loadedData->m_Color.blue = strSplit(&dataLine);
+
+		// 폴리곤 로드
+		loadedData->m_NumberOfPolyDots = strSplit(&dataLine);
+
+		for (int i = 0; i < loadedData->m_NumberOfPolyDots; ++i)
+		{
+			loadedData->m_PolygonDots[i].x = strSplit(&dataLine);
+			loadedData->m_PolygonDots[i].y = strSplit(&dataLine);
+		}
+
+		// 벡터에 담음
+		DrawDataVector.push_back(loadedData);
 	}
+
+	fclose(fp);
+
+	// 화면을 지우고 로드한 데이터를 그려줌
+	InvalidateRect(hWnd, NULL, TRUE);
+
 
 	return PERFORM_WELL;
 }
 
-// 문자열 앞에서부터 최초로 만나는 쉼표까지의 문자열과 그 뒤까지의 문자열을 잘라주는 함수.
-std::string* strSplit(std::string originStr)
+// 문자열 앞에서부터 최초로 만나는 쉼표까지의 문자열을 반환하고 그 뒤까지의 문자열을 잘라주는 함수.
+// 쉼표 전까지의 문자열은 int형태로 반환하고, 인자로 받은 문자열은 앞을 잘라준다.
+int strSplit(std::string* originStr)
 {
 	int cutPoint;
 
-	cutPoint = originStr.find_first_of(",");
-	if (cutPoint != originStr.npos)
+	cutPoint = originStr->find_first_of(",");
+
+	std::string* strResult = new std::string(originStr->substr(0, cutPoint));
+
+	*originStr = originStr->substr(cutPoint + 1);
+
+	int ret = ::atoi(strResult->c_str());
+	return ret;
+}
+
+// 인자로 들어온 int를 bool값으로 반환해주는 함수.
+bool to_bool(const int boolVal)
+{
+	if (boolVal == 0)
 	{
-		return nullptr;
+		return false;
 	}
-
-	std::string* strResult = new std::string(originStr.substr(0, cutPoint));
-	originStr = originStr.substr(cutPoint + 1);
-
-	return strResult;
+	return true;
 }
 
 #endif

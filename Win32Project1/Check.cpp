@@ -1,4 +1,3 @@
-#define CheckPractice
 
 #ifdef CheckPractice
 #include <Windows.h>
