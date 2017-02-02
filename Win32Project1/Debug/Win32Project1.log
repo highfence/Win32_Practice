@@ -1,5 +1,4 @@
 ﻿  ImgScroll.cpp
-  ChungDol.cpp
-  코드를 생성하고 있습니다...
+c:\users\kwen won lee\desktop\project\win32project1\win32project1\imgscroll.h(32): warning C4091: 'typedef ': 변수를 선언하지 않으면 'BackGroundImg' 왼쪽은 무시됩니다.
   Win32Project1.vcxproj -> C:\Users\kwen won Lee\Desktop\Project\Win32Project1\Debug\Win32Project1.exe
   Win32Project1.vcxproj -> C:\Users\kwen won Lee\Desktop\Project\Win32Project1\Debug\Win32Project1.pdb (Full PDB)

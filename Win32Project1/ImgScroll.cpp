@@ -1,6 +1,8 @@
 #include <Windows.h>
-#include "ImgScroll.h"
+#include <vector>
+#include <string>
 #include <atlimage.h>
+#include "ImgScroll.h"
 
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE PrevhInstance, LPSTR lpszCmdParam, int nCmdShow)
 {
@@ -26,10 +28,20 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE PrevhInstance, LPSTR lpszCmd
 		NULL, (HMENU)NULL, hInstance, NULL);
 	ShowWindow(hWnd, nCmdShow);
 
-	while (GetMessage(&Message, NULL, 0, 0))
+	while (true)
 	{
-		TranslateMessage(&Message);
-		DispatchMessage(&Message);
+		if (PeekMessage(&Message, NULL, 0, 0, PM_REMOVE))
+		{
+			if (Message.message == WM_QUIT)
+			{
+				break;
+			}
+			TranslateMessage(&Message);
+			DispatchMessage(&Message);
+		}
+		else
+		{
+		}
 	}
 
 	return (int)Message.wParam;
@@ -49,41 +61,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 	}
 
 	return (DefWindowProc(hWnd, iMessage, wParam, lParam));
-}
-
-
-ImgScroller::ImgScroller(HDC hdc, LPCWSTR imgPath, INT scrollPosX, INT scrollPosY, FLOAT runningDeltaTime)
-	: m_hdc(hdc), m_ScrollPosX(scrollPosX), m_ScrollPosY(scrollPosY), m_RunningDeltaTime(runningDeltaTime)
-{
-	m_pTimer = new CMyTimer;
-	m_pScrollImg->Load(imgPath);
-	m_pTimer->MakeTimerFlag();
-	return;
-}
-
-ImgScroller::~ImgScroller()
-{
-	delete m_pTimer;
-	delete m_pScrollImg;
-	return;
-}
-
-void ImgScroller::Scroll()
-{
-	FLOAT dt = m_pTimer->GetElapsedTime();
-
-	if (dt == -1.f)
-	{
-		OutputDebugString(L"타이머 고장.");
-		return;
-	}
-
-
-
-	// TODO :: 여기서 부터
-	m_pTimer->MakeTimerFlag();
-
-	return;
 }
 
 CMyTimer::CMyTimer()
@@ -125,4 +102,30 @@ FLOAT CMyTimer::GetElapsedTime()
 	m_StandardFlag = false;
 
 	return elapsedSeconds;
+}
+
+ImgScroller::ImgScroller(HWND hWnd)
+	: m_hWnd(hWnd)
+{
+	m_pTimer = new CMyTimer;
+}
+
+ImgScroller::~ImgScroller()
+{
+	delete m_pTimer;
+}
+
+void ImgScroller::LoadData()
+{
+	BackGroundImg sky1;
+	sky1.img.Load(sky1path);
+	sky1.scrollX = 0;
+	sky1.scrollY = 0;
+	sky1.resourceWidth = sky1Width;
+	sky1.resourceHeight = sky1Height;
+	sky1.scrollSpeed = sky1ScrollSpeed;
+
+	m_ImgVec.push_back(sky1);
+
+	return;
 }
