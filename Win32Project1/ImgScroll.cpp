@@ -55,7 +55,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 	switch (iMessage)
 	{
 	case WM_CREATE :
-
 		return 0;
 
 	case WM_DESTROY :
@@ -173,7 +172,7 @@ void ImgScroller::Scroll()
 	HDC imgDC = CreateCompatibleDC(m_hdc);
 	for (auto i : m_ImgVec)
 	{
-		i.scrollX -= dt * i.scrollSpeed;
+		i.scrollX -= i.scrollX - minus;
 		if (i.scrollX <= -i.resourceWidth)
 		{
 			i.scrollX += i.resourceWidth;
