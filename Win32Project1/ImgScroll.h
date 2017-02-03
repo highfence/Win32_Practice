@@ -23,11 +23,11 @@ private :
 
 typedef struct BackGroundImg
 {
-	CImage img;
+	WORD imgId;
 	INT resourceWidth;
 	INT resourceHeight;
-	INT scrollX;
-	INT scrollY;
+	FLOAT scrollX;
+	FLOAT scrollY;
 	INT scrollSpeed;
 };
 
@@ -38,6 +38,7 @@ public :
 	~ImgScroller();
 
 	void LoadData();
+	void Scroll();
 
 private :
 	// 인자없이 생성 불가.
@@ -45,6 +46,7 @@ private :
 	
 	CMyTimer* m_pTimer;
 	HWND m_hWnd;
+	HDC m_hdc;
 	std::vector<BackGroundImg> m_ImgVec;
 };
 
@@ -53,10 +55,16 @@ private :
 const INT winWidth = 640;
 const INT winHeight = 480;
 
-LPCTSTR sky1path(L"../Resource/sky1.bmp");
 const INT sky1Width = 640;
 const INT sky1Height = 124;
 const INT sky1ScrollSpeed = 30;
 
+const INT sky2Width = 640;
+const INT sky2Height = 214;
+const INT sky2ScrollSpeed = 30;
+
+const INT sky3Width = 640;
+const INT sky3Height = 142;
+const INT sky3ScrollSpeed = 30;
 // Functions
 

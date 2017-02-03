@@ -179,6 +179,8 @@
   <ItemGroup>
     <Image Include="..\Resource\BackGround.bmp" />
     <Image Include="..\Resource\sky1.bmp" />
+    <Image Include="..\Resource\sky2.bmp" />
+    <Image Include="..\Resource\sky3.bmp" />
     <Image Include="angryBirdIcon\Fasticon-Angry-Birds-Red-bird.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
