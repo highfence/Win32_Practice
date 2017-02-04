@@ -7,6 +7,7 @@
 
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE PrevhInstance, LPSTR lpszCmdParam, int nCmdShow)
 {
+	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 	HWND hWnd;
 	MSG Message;
 	WNDCLASS WndClass;
@@ -168,7 +169,6 @@ void ImgScroller::Scroll()
 	HBITMAP memoryBitmap = CreateCompatibleBitmap(m_hdc, winWidth, winHeight);
 	HBITMAP oldBitmap = (HBITMAP)SelectObject(memoryDC, memoryBitmap);
 
-	// 문제의 지점.
 	HDC imgDC = CreateCompatibleDC(m_hdc);
 	for (auto i : m_ImgVec)
 	{
@@ -189,6 +189,7 @@ void ImgScroller::Scroll()
 	SelectObject(m_hdc, oldBitmap);
 	DeleteObject(memoryBitmap);
 	DeleteObject(memoryDC);
+	DeleteObject(imgDC);
 
 	ReleaseDC(m_hWnd, m_hdc);
 
