@@ -121,36 +121,36 @@ ImgScroller::~ImgScroller()
 
 void ImgScroller::LoadData()
 {
-	BackGroundImg sky1;
+	BackGroundImg* sky1 = new BackGroundImg;
 
-	sky1.imgId = IDB_SKY1;
-	sky1.scrollX = 0;
-	sky1.scrollY = 0;
-	sky1.resourceWidth = sky1Width;
-	sky1.resourceHeight = sky1Height;
-	sky1.scrollSpeed = sky1ScrollSpeed;
+	sky1->imgId = IDB_SKY1;
+	sky1->scrollX = 0;
+	sky1->scrollY = 0;
+	sky1->resourceWidth = sky1Width;
+	sky1->resourceHeight = sky1Height;
+	sky1->scrollSpeed = sky1ScrollSpeed;
 
 	m_ImgVec.push_back(sky1);
 
-	BackGroundImg sky2;
+	BackGroundImg* sky2 = new BackGroundImg;
 
-	sky2.imgId = IDB_SKY2;
-	sky2.scrollX = 0;
-	sky2.scrollY = sky1Height;
-	sky2.resourceWidth = sky2Width;
-	sky2.resourceHeight = sky2Height;
-	sky2.scrollSpeed = sky2ScrollSpeed;
+	sky2->imgId = IDB_SKY2;
+	sky2->scrollX = 0;
+	sky2->scrollY = sky1Height;
+	sky2->resourceWidth = sky2Width;
+	sky2->resourceHeight = sky2Height;
+	sky2->scrollSpeed = sky2ScrollSpeed;
 	
 	m_ImgVec.push_back(sky2);
 
-	BackGroundImg sky3;
+	BackGroundImg* sky3 = new BackGroundImg;
 
-	sky3.imgId = IDB_SKY3;
-	sky3.scrollX = 0;
-	sky3.scrollY = sky1Height + sky2Height;
-	sky3.resourceWidth = sky3Width;
-	sky3.resourceHeight = sky3Height;
-	sky3.scrollSpeed = sky3ScrollSpeed;
+	sky3->imgId = IDB_SKY3;
+	sky3->scrollX = 0;
+	sky3->scrollY = sky1Height + sky2Height;
+	sky3->resourceWidth = sky3Width;
+	sky3->resourceHeight = sky3Height;
+	sky3->scrollSpeed = sky3ScrollSpeed;
 
 	m_ImgVec.push_back(sky3);
 
@@ -172,15 +172,16 @@ void ImgScroller::Scroll()
 	HDC imgDC = CreateCompatibleDC(m_hdc);
 	for (auto i : m_ImgVec)
 	{
-		i.scrollX -= i.scrollX - minus;
-		if (i.scrollX <= -i.resourceWidth)
+		i->scrollX -= dt * i->scrollSpeed;
+		if (i->scrollX <= -i->resourceWidth)
 		{
-			i.scrollX += i.resourceWidth;
+			i->scrollX += i->resourceWidth;
 		}
-		HBITMAP hBitmap = LoadBitmap((HINSTANCE)GetWindowLong(m_hWnd, GWL_HINSTANCE), MAKEINTRESOURCE(i.imgId));
+		HBITMAP hBitmap = LoadBitmap((HINSTANCE)GetWindowLong(m_hWnd, GWL_HINSTANCE), MAKEINTRESOURCE(i->imgId));
 		SelectObject(imgDC, hBitmap);
-		BitBlt(memoryDC, i.scrollX, i.scrollY, i.resourceWidth, i.resourceHeight, imgDC, 0, 0, SRCCOPY);
-		BitBlt(memoryDC, i.scrollX + i.resourceWidth, i.scrollY, i.resourceWidth, i.resourceHeight, imgDC, 0, 0, SRCCOPY);
+		BitBlt(memoryDC, i->scrollX, i->scrollY, i->resourceWidth, i->resourceHeight, imgDC, 0, 0, SRCCOPY);
+		BitBlt(memoryDC, i->scrollX + i->resourceWidth, i->scrollY, i->resourceWidth, i->resourceHeight, imgDC, 0, 0, SRCCOPY);
+		DeleteObject(hBitmap);
 	}
 
 	BitBlt(m_hdc, 0, 0, winWidth, winHeight, memoryDC, 0, 0, SRCCOPY);
