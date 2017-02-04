@@ -118,6 +118,8 @@ ImgScroller::ImgScroller(HWND hWnd)
 ImgScroller::~ImgScroller()
 {
 	delete m_pTimer;
+	m_ImgVec.clear();
+	std::vector<BackGroundImg*>().swap(m_ImgVec);
 }
 
 void ImgScroller::LoadData()

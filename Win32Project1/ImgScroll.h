@@ -50,14 +50,13 @@ private :
 	std::vector<BackGroundImg*> m_ImgVec;
 };
 
-
 // Const Values
 const INT winWidth = 640;
 const INT winHeight = 480;
 
 const INT sky1Width = 640;
 const INT sky1Height = 124;
-const INT sky1ScrollSpeed = 64;
+const INT sky1ScrollSpeed = 192;
 
 const INT sky2Width = 640;
 const INT sky2Height = 214;
@@ -65,7 +64,4 @@ const INT sky2ScrollSpeed = 128;
 
 const INT sky3Width = 640;
 const INT sky3Height = 142;
-const INT sky3ScrollSpeed = 192;
-
-// Functions
-
+const INT sky3ScrollSpeed = 64;
