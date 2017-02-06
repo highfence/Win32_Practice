@@ -61,6 +61,11 @@ private :
 	Airplane* m_pAirplane;
 	HWND m_hWnd;
 	HDC m_hdc;
+	HDC m_MemoryDC;
+	HDC m_ImgDC;
+	HBITMAP m_MemoryBitmap;
+	HBITMAP m_OldBitmap;
+
 	std::vector<BackGroundImg*> m_ImgVec;
 };
 

@@ -124,13 +124,10 @@ ImgScroller::ImgScroller()
 	m_pAirplane = new Airplane;
 	m_pTimer = new CMyTimer;
 	m_pTimer->MakeTimerFlag();
+
 	LoadData();
 }
 
-void ImgScroller::SethWnd(HWND hWnd)
-{
-	m_hWnd = hWnd;
-}
 
 ImgScroller::~ImgScroller()
 {
@@ -138,6 +135,21 @@ ImgScroller::~ImgScroller()
 	delete m_pTimer;
 	m_ImgVec.clear();
 	std::vector<BackGroundImg*>().swap(m_ImgVec);
+	DeleteObject(m_MemoryBitmap);
+	DeleteObject(m_MemoryDC);
+	DeleteObject(m_ImgDC);
+	ReleaseDC(m_hWnd, m_hdc);
+}
+
+void ImgScroller::SethWnd(HWND hWnd)
+{
+	m_hWnd = hWnd;
+	m_hdc = GetDC(m_hWnd);	
+	m_MemoryDC = CreateCompatibleDC(m_hdc);
+	m_MemoryBitmap = CreateCompatibleBitmap(m_hdc, winWidth, winHeight);
+	m_OldBitmap = (HBITMAP)SelectObject(m_MemoryDC, m_MemoryBitmap);
+	m_ImgDC = CreateCompatibleDC(m_hdc);
+	return;
 }
 
 void ImgScroller::LoadData()
@@ -183,13 +195,9 @@ void ImgScroller::Scroll()
 {
 	FLOAT dt = m_pTimer->GetElapsedTime();
 	m_pTimer->MakeTimerFlag();
-	m_hdc = GetDC(m_hWnd);
 
-	HDC memoryDC = CreateCompatibleDC(m_hdc);
-	HBITMAP memoryBitmap = CreateCompatibleBitmap(m_hdc, winWidth, winHeight);
-	HBITMAP oldBitmap = (HBITMAP)SelectObject(memoryDC, memoryBitmap);
 
-	HDC imgDC = CreateCompatibleDC(m_hdc);
+
 	for (auto i : m_ImgVec)
 	{
 		i->scrollX -= dt * i->scrollSpeed;
@@ -198,25 +206,23 @@ void ImgScroller::Scroll()
 			i->scrollX += i->resourceWidth;
 		}
 		HBITMAP hBitmap = LoadBitmap((HINSTANCE)GetWindowLong(m_hWnd, GWL_HINSTANCE), MAKEINTRESOURCE(i->imgId));
-		SelectObject(imgDC, hBitmap);
-		BitBlt(memoryDC, i->scrollX, i->scrollY, i->resourceWidth, i->resourceHeight, imgDC, 0, 0, SRCCOPY);
-		BitBlt(memoryDC, i->scrollX + i->resourceWidth, i->scrollY, i->resourceWidth, i->resourceHeight, imgDC, 0, 0, SRCCOPY);
+		SelectObject(m_ImgDC, hBitmap);
+		BitBlt(m_MemoryDC, i->scrollX, i->scrollY, i->resourceWidth, i->resourceHeight, m_ImgDC, 0, 0, SRCCOPY);
+		BitBlt(m_MemoryDC, i->scrollX + i->resourceWidth, i->scrollY, i->resourceWidth, i->resourceHeight, m_ImgDC, 0, 0, SRCCOPY);
 		DeleteObject(hBitmap);
 	}
 
 	HBITMAP airplaneBitmap = LoadBitmap((HINSTANCE)GetWindowLong(m_hWnd, GWL_HINSTANCE), MAKEINTRESOURCE(m_pAirplane->m_imgId));
-	SelectObject(imgDC, airplaneBitmap);
-	BitBlt(memoryDC, m_pAirplane->m_posX, m_pAirplane->m_posY, m_pAirplane->m_imgWidth, m_pAirplane->m_imgHeight, imgDC, 0, 0, SRCAND);
-	BitBlt(memoryDC, m_pAirplane->m_posX, m_pAirplane->m_posY, m_pAirplane->m_imgWidth, m_pAirplane->m_imgHeight, imgDC, 0, m_pAirplane->m_imgHeight, SRCPAINT);
+	SelectObject(m_ImgDC, airplaneBitmap);
+	BitBlt(m_MemoryDC, m_pAirplane->m_posX, m_pAirplane->m_posY, m_pAirplane->m_imgWidth, m_pAirplane->m_imgHeight, m_ImgDC, 0, 0, SRCAND);
+	BitBlt(m_MemoryDC, m_pAirplane->m_posX, m_pAirplane->m_posY, m_pAirplane->m_imgWidth, m_pAirplane->m_imgHeight, m_ImgDC, 0, m_pAirplane->m_imgHeight, SRCPAINT);
+	DeleteObject(airplaneBitmap);
 
-	BitBlt(m_hdc, 0, 0, winWidth, winHeight, memoryDC, 0, 0, SRCCOPY);
+	BitBlt(m_hdc, 0, 0, winWidth, winHeight, m_MemoryDC, 0, 0, SRCCOPY);
 
-	SelectObject(m_hdc, oldBitmap);
-	DeleteObject(memoryBitmap);
-	DeleteObject(memoryDC);
-	DeleteObject(imgDC);
+	SelectObject(m_hdc, m_OldBitmap);
 
-	ReleaseDC(m_hWnd, m_hdc);
+
 
 	return;
 }
