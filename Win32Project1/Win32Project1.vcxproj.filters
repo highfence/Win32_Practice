@@ -82,6 +82,15 @@
     <ClCompile Include="ImgScroll.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="CmdMake.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Adderprocess.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="CreateProcess.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Cursor_Icon_Files\Cursor\LeagueOfLegends\link.cur">
@@ -103,6 +112,9 @@
       <Filter>리소스 파일</Filter>
     </Image>
     <Image Include="..\Resource\sky3.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="..\Resource\airplane.bmp">
       <Filter>리소스 파일</Filter>
     </Image>
   </ItemGroup>

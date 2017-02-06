@@ -1,9 +1,13 @@
+#define IMG_SCROLL
+#ifdef IMG_SCROLL
 #include <Windows.h>
 #include <vector>
 #include <string>
 #include <atlimage.h>
 #include "resource2.h"
 #include "ImgScroll.h"
+
+ImgScroller imgScroller;
 
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE PrevhInstance, LPSTR lpszCmdParam, int nCmdShow)
 {
@@ -30,7 +34,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE PrevhInstance, LPSTR lpszCmd
 		NULL, (HMENU)NULL, hInstance, NULL);
 	ShowWindow(hWnd, nCmdShow);
 
-	ImgScroller imgScroller(hWnd);
+	imgScroller.SethWnd(hWnd);
 	while (true)
 	{
 		if (PeekMessage(&Message, NULL, 0, 0, PM_REMOVE))
@@ -56,6 +60,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 	switch (iMessage)
 	{
 	case WM_CREATE :
+		return 0;
+
+	case WM_MOUSEMOVE :
+	{
+		INT x = LOWORD(lParam);
+		INT y = HIWORD(lParam);
+		imgScroller.SetAirplanePos(x, y);
+	}
 		return 0;
 
 	case WM_DESTROY :
@@ -107,16 +119,22 @@ FLOAT CMyTimer::GetElapsedTime()
 	return elapsedSeconds;
 }
 
-ImgScroller::ImgScroller(HWND hWnd)
-	: m_hWnd(hWnd)
+ImgScroller::ImgScroller()
 {
+	m_pAirplane = new Airplane;
 	m_pTimer = new CMyTimer;
 	m_pTimer->MakeTimerFlag();
 	LoadData();
 }
 
+void ImgScroller::SethWnd(HWND hWnd)
+{
+	m_hWnd = hWnd;
+}
+
 ImgScroller::~ImgScroller()
 {
+	delete m_pAirplane;
 	delete m_pTimer;
 	m_ImgVec.clear();
 	std::vector<BackGroundImg*>().swap(m_ImgVec);
@@ -186,6 +204,11 @@ void ImgScroller::Scroll()
 		DeleteObject(hBitmap);
 	}
 
+	HBITMAP airplaneBitmap = LoadBitmap((HINSTANCE)GetWindowLong(m_hWnd, GWL_HINSTANCE), MAKEINTRESOURCE(m_pAirplane->m_imgId));
+	SelectObject(imgDC, airplaneBitmap);
+	BitBlt(memoryDC, m_pAirplane->m_posX, m_pAirplane->m_posY, m_pAirplane->m_imgWidth, m_pAirplane->m_imgHeight, imgDC, 0, 0, SRCAND);
+	BitBlt(memoryDC, m_pAirplane->m_posX, m_pAirplane->m_posY, m_pAirplane->m_imgWidth, m_pAirplane->m_imgHeight, imgDC, 0, m_pAirplane->m_imgHeight, SRCPAINT);
+
 	BitBlt(m_hdc, 0, 0, winWidth, winHeight, memoryDC, 0, 0, SRCCOPY);
 
 	SelectObject(m_hdc, oldBitmap);
@@ -197,3 +220,17 @@ void ImgScroller::Scroll()
 
 	return;
 }
+
+Airplane::Airplane()
+	: m_imgId(IDB_AIRPLANE), m_imgWidth(airplaneWidth), m_imgHeight(airplaneHeight), m_posX(0), m_posY(0)
+{}
+
+void ImgScroller::SetAirplanePos(INT x, INT y)
+{
+	m_pAirplane->m_posX = x;
+	m_pAirplane->m_posY = y;
+	return;
+}
+
+#endif
+

@@ -1,0 +1,70 @@
+#define FREEKEY	0x10	// 눌르지 않은 상태. // 00010000
+#define PULLKEY	0x20	// 눌렀다 띄었을때   // 00100000
+#define PUSHKEY	0x40	// 누르자 마자      // 01000000
+#define HOLDKEY	0x80	// 누르고 있는 중    // 10000000
+
+void KeyInput()
+{
+	// ------------------ Init -------------------
+	// 매 프레임 한번만 처리하면 됨.
+	// 입력감지
+	static	BYTE	byOldKey[256] = { 0 };
+	BYTE	byKey[256];
+
+	if(GetKeyboardState(byKey))	
+	{
+		// DOWN 및 UP계산
+		for(int i = 0; i < 256; i++)
+		{
+			if(byKey[i] & 0x80)
+			{
+				if(!byOldKey[i])
+				{
+					byOldKey[i] = 1;
+					byKey[i] |= 0x40;
+				}
+			}
+			else
+			{
+				if(byOldKey[i])
+				{
+					byOldKey[i] = 0;
+					byKey[i] = 0x20;
+				}
+				else
+					byKey[i] = 0x10;
+			}
+		}
+	}
+	// ------------------ Init 끝 -------------------
+
+	if(byKey['C'] & PUSHKEY)
+	{
+		// C가 눌렸다면
+	}
+	if(byKey['Z'] & PUSHKEY)
+	{
+		// Z 가 눌렸다면
+	}
+	if(byKey['Z'] & PULLKEY)
+	{
+		// Z를 눌렀다가 띄었을때
+	}
+	if(byKey[VK_UP] & HOLDKEY)
+	{
+		// 위쪽 화살표 누르는 중
+	}
+	else if(byKey[VK_DOWN] & HOLDKEY)
+	{
+		// 아래쪽 화살표 누르는 중
+	}
+	if(byKey[VK_LEFT] & HOLDKEY)
+	{
+		// 왼쪽 화살표 누르는 중
+	}
+	else if(byKey[VK_RIGHT] & HOLDKEY)
+	{
+		// 오른쪽 화살표 누르는 중
+	}			
+
+}

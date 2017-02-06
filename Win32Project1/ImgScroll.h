@@ -31,24 +31,39 @@ typedef struct BackGroundImg
 	INT scrollSpeed;
 };
 
+class Airplane
+{
+public :
+	Airplane();
+	~Airplane() = default;
+
+	WORD m_imgId;
+	INT m_imgWidth;
+	INT m_imgHeight;
+	INT m_posX;
+	INT m_posY;
+};
+
 class ImgScroller
 {
 public :
-	ImgScroller(HWND hWnd);
+	ImgScroller();
 	~ImgScroller();
 
 	void LoadData();
 	void Scroll();
+	void SethWnd(HWND);
+	void SetAirplanePos(INT, INT);
 
 private :
-	// 인자없이 생성 불가.
-	ImgScroller();
 	
 	CMyTimer* m_pTimer;
+	Airplane* m_pAirplane;
 	HWND m_hWnd;
 	HDC m_hdc;
 	std::vector<BackGroundImg*> m_ImgVec;
 };
+
 
 // Const Values
 const INT winWidth = 640;
@@ -65,3 +80,6 @@ const INT sky2ScrollSpeed = 128;
 const INT sky3Width = 640;
 const INT sky3Height = 142;
 const INT sky3ScrollSpeed = 64;
+
+const INT airplaneWidth = 50;
+const INT airplaneHeight = 15;

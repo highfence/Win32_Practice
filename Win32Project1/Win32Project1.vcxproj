@@ -157,9 +157,12 @@
     <ResourceCompile Include="Win32Project1.rc" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Adderprocess.cpp" />
     <ClCompile Include="Check.cpp" />
     <ClCompile Include="ChungDol.cpp" />
+    <ClCompile Include="CmdMake.cpp" />
     <ClCompile Include="Control.cpp" />
+    <ClCompile Include="CreateProcess.cpp" />
     <ClCompile Include="Cursor.cpp" />
     <ClCompile Include="First.cpp" />
     <ClCompile Include="Image.cpp" />
@@ -177,6 +180,7 @@
     <None Include="Cursor_Icon_Files\Cursor\LeagueOfLegends\link.cur" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="..\Resource\airplane.bmp" />
     <Image Include="..\Resource\BackGround.bmp" />
     <Image Include="..\Resource\sky1.bmp" />
     <Image Include="..\Resource\sky2.bmp" />
