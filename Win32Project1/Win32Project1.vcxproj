@@ -148,6 +148,7 @@
   <ItemGroup>
     <ClInclude Include="ChungDol.h" />
     <ClInclude Include="ImgScroll.h" />
+    <ClInclude Include="KeyState.h" />
     <ClInclude Include="RandomDraw.h" />
     <ClInclude Include="RandomDrawHW.h" />
     <ClInclude Include="resource.h" />
