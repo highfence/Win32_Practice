@@ -1,4 +1,8 @@
-#ifdef CREATEPROCESS
+#define CREATE_PROCESS
+#ifdef CREATE_PROCESS
+
+
+
 #include <stdio.h>
 #include <tchar.h>
 #include <Windows.h>
@@ -18,7 +22,7 @@ int _tmain(int argc, TCHAR* argv[])
 	si.dwYSize = 200;
 	si.lpTitle = _T("I am a boy!");
 
-	TCHAR command[] = _T("AdderProcess.exe 10 20");
+	TCHAR command[] = _T("Adderprocess.exe 10 20");
 	TCHAR cDir[DIR_LEN];
 	BOOL state;
 

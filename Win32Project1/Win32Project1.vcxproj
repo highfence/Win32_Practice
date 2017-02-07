@@ -153,6 +153,7 @@
     <ClInclude Include="RandomDrawHW.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="resource2.h" />
+    <ClInclude Include="ShootingGame.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Win32Project1.rc" />
@@ -169,10 +170,13 @@
     <ClCompile Include="Image.cpp" />
     <ClCompile Include="ImgScroll.cpp" />
     <ClCompile Include="Mouse.cpp" />
+    <ClCompile Include="Operation1.cpp" />
+    <ClCompile Include="Operation2.cpp" />
     <ClCompile Include="Practice.cpp" />
     <ClCompile Include="Radiobox.cpp" />
     <ClCompile Include="RandomDraw.cpp" />
     <ClCompile Include="RandomDrawHW.cpp" />
+    <ClCompile Include="ShootingGame.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="WinMain.cpp" />
   </ItemGroup>

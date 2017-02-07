@@ -67,6 +67,7 @@ public :
 	INT				m_posX;
 	INT				m_posY;
 	INT				m_imgVer;
+	BOOL			m_IsAirplaneFront;
 };
 
 class ImgScroller

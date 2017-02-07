@@ -1,4 +1,5 @@
-#ifdef ADDERPROCESS
+//#define ADDER_PROCESS
+#ifdef ADDER_PROCESS
 #include <stdio.h>
 #include <tchar.h>
 #include <Windows.h>

@@ -1,4 +1,3 @@
-#define IMG_SCROLL
 #ifdef IMG_SCROLL
 
 #include <Windows.h>
@@ -216,12 +215,13 @@ void ImgScroller::Scroll()
 }
 
 Airplane::Airplane()
-	: m_imgId(IDB_AIRPLANE), 
+	: m_imgId(IDB_AIRPLANE),
 	  m_imgWidth(airplaneWidth),
 	  m_imgHeight(airplaneHeight),
 	  m_posX(0),
 	  m_posY(0),
-	  m_imgVer(0)
+	  m_imgVer(0),
+	  m_IsAirplaneFront(true)
 {}
 
 void ImgScroller::SetAirplanePos(INT x, INT y)
@@ -238,13 +238,30 @@ void Airplane::animate(HWND m_hWnd, HDC m_ImgDC, HDC m_MemoryDC)
 
 	if (m_imgVer == 0)
 	{
-		BitBlt(m_MemoryDC, m_posX, m_posY, m_imgWidth, m_imgHeight, m_ImgDC, 0, 0, SRCAND);
-		BitBlt(m_MemoryDC, m_posX, m_posY, m_imgWidth, m_imgHeight, m_ImgDC, 0, m_imgHeight, SRCPAINT);
+		if (m_IsAirplaneFront == true)
+		{
+			BitBlt(m_MemoryDC, m_posX, m_posY, m_imgWidth, m_imgHeight, m_ImgDC, 0, 0, SRCAND);
+			BitBlt(m_MemoryDC, m_posX, m_posY, m_imgWidth, m_imgHeight, m_ImgDC, 0, m_imgHeight, SRCPAINT);
+		}
+		else
+		{
+			// TODO :: 플립이 잘 안됨.
+			StretchBlt(m_MemoryDC, m_posX, m_posY, m_imgWidth, m_imgHeight, m_ImgDC, 50, 0, -50, 15, SRCAND);
+			StretchBlt(m_MemoryDC, m_posX, m_posY, m_imgWidth, m_imgHeight, m_ImgDC, 50, 15, -50, 15, SRCPAINT);
+		}
 	}
 	else
 	{
-		BitBlt(m_MemoryDC, m_posX, m_posY, m_imgWidth, m_imgHeight, m_ImgDC, m_imgWidth, 0, SRCAND);
-		BitBlt(m_MemoryDC, m_posX, m_posY, m_imgWidth, m_imgHeight, m_ImgDC, m_imgWidth, m_imgHeight, SRCPAINT);
+		if (m_IsAirplaneFront == true)
+		{
+			BitBlt(m_MemoryDC, m_posX, m_posY, m_imgWidth, m_imgHeight, m_ImgDC, m_imgWidth, 0, SRCAND);
+			BitBlt(m_MemoryDC, m_posX, m_posY, m_imgWidth, m_imgHeight, m_ImgDC, m_imgWidth, m_imgHeight, SRCPAINT);
+		}
+		else
+		{
+			StretchBlt(m_MemoryDC, m_posX, m_posY, m_imgWidth, m_imgHeight, m_ImgDC, 100, 0, -50, 15, SRCAND);
+			StretchBlt(m_MemoryDC, m_posX, m_posY, m_imgWidth, m_imgHeight, m_ImgDC, 100, 15, -50, 15, SRCPAINT);
+		}
 	}
 	DeleteObject(airplaneBitmap);
 	return;
@@ -324,10 +341,12 @@ void ImgScroller::MakeAirplaneMove()
 	if (m_ByKey['A'] & HOLDKEY)
 	{
 		m_pAirplane->m_posX -= movePixel;
+		m_pAirplane->m_IsAirplaneFront = false;
 	}
 	if (m_ByKey['D'] & HOLDKEY)
 	{
 		m_pAirplane->m_posX += movePixel;
+		m_pAirplane->m_IsAirplaneFront = true;
 	}
 
 	return;

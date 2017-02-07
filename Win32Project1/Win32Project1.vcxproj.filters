@@ -36,6 +36,9 @@
     <ClInclude Include="KeyState.h">
       <Filter>소스 파일</Filter>
     </ClInclude>
+    <ClInclude Include="ShootingGame.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Win32Project1.rc">
@@ -92,6 +95,15 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="CreateProcess.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="ShootingGame.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Operation1.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Operation2.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
